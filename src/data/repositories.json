@@ -1,0 +1,16 @@
+[
+  {
+    "id": "proj-customer-portal",
+    "title": "Customer Portal",
+    "description": "Next.js front-end for customer self-service, onboarding, and account management.",
+    "visibility": "public",
+    "user_id": "user-alice"
+  },
+  {
+    "id": "proj-payments-gateway",
+    "title": "Payments Gateway",
+    "description": "High-throughput payments orchestration layer with integrations to external providers.",
+    "visibility": "private",
+    "user_id": "user-alice"
+  }
+]

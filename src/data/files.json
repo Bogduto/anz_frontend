@@ -1,0 +1,15 @@
+[
+  { "id": "file-001", "slice_id": "slice-001", "filename": "page.tsx", "path": "src/app/page.tsx", "size": 2450 },
+  { "id": "file-002", "slice_id": "slice-001", "filename": "Header.tsx", "path": "src/components/Header.tsx", "size": 1200 },
+  { "id": "file-003", "slice_id": "slice-002", "filename": "globals.css", "path": "src/styles/globals.css", "size": 800 },
+  { "id": "file-004", "slice_id": "slice-003", "filename": "useAuth.ts", "path": "src/hooks/useAuth.ts", "size": 1500 },
+  { "id": "file-005", "slice_id": "slice-004", "filename": "db.ts", "path": "src/lib/db.ts", "size": 3200 },
+  { "id": "file-006", "slice_id": "slice-004", "filename": "schema.prisma", "path": "prisma/schema.prisma", "size": 2100 },
+  { "id": "file-007", "slice_id": "slice-005", "filename": "OnboardingForm.tsx", "path": "src/components/OnboardingForm.tsx", "size": 4800 },
+  { "id": "file-008", "slice_id": "slice-007", "filename": "RepositoryList.tsx", "path": "src/components/RepositoryList.tsx", "size": 2900 },
+  { "id": "file-009", "slice_id": "slice-008", "filename": "repositories.ts", "path": "src/lib/repositories.ts", "size": 1800 },
+  { "id": "file-010", "slice_id": "slice-010", "filename": "authorise.ts", "path": "src/payments/authorise.ts", "size": 4100 },
+  { "id": "file-011", "slice_id": "slice-010", "filename": "stripe-adapter.ts", "path": "src/adapters/stripe-adapter.ts", "size": 2200 },
+  { "id": "file-012", "slice_id": "slice-011", "filename": "settlement.ts", "path": "src/payments/settlement.ts", "size": 3500 },
+  { "id": "file-013", "slice_id": "slice-019", "filename": "handler.go", "path": "internal/api/handler.go", "size": 5200 }
+]
