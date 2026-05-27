@@ -1,240 +1,119 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Code Activity Insights – Landing",
+  title: "anz — Трекер активності у воркспейсах",
   description:
-    "Landing page for a code activity analytics system that captures developer activity in VS Code, stores it in Supabase, and visualizes productivity with a modern Next.js web UI.",
+    "anz автоматично фіксує скільки часу ти витрачаєш на кожен проєкт, які файли відкриваєш та коли найбільш продуктивний.",
 };
 
+const GITHUB_ICON = (
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.341-3.369-1.341-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+  </svg>
+);
+
 export default function LandingPage() {
+  const btnPrimary: React.CSSProperties = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "14px",
+    fontWeight: 500,
+    padding: "10px 20px",
+    borderRadius: "var(--border-radius-md)",
+    background: "#F5F0E8",
+    color: "#1C1917",
+    border: "none",
+    cursor: "pointer",
+    textDecoration: "none",
+    whiteSpace: "nowrap",
+  };
+
   return (
-    <div className="min-h-screen bg-zinc-50 px-4 py-10 font-sans text-zinc-900 dark:bg-black dark:text-zinc-50 sm:px-8">
-      <main
-        className="mx-auto flex w-full max-w-5xl flex-col gap-10"
-        aria-label="Product landing page"
+    <div
+      style={{
+        background: "var(--color-background-tertiary)",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* ── HERO ───────────────────────────────────────────────── */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          padding: "5rem 2rem 3.5rem",
+        }}
       >
-        {/* Hero / Title */}
-        <section
-          className="space-y-4 rounded-3xl bg-white/90 p-8 shadow-lg shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/80"
-          aria-labelledby="landing-title"
+        {/* Badge */}
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            fontSize: "12px",
+            fontWeight: 500,
+            padding: "4px 12px",
+            borderRadius: "20px",
+            background: "rgba(245,158,11,0.12)",
+            color: "#F59E0B",
+            marginBottom: "1.5rem",
+          }}
         >
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between">
-            <h1
-              id="landing-title"
-              className="text-2xl font-semibold tracking-tight sm:text-3xl"
-            >
-              Code Activity Insights / Аналітика активності розробника
-            </h1>
-            <p
-              className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
-              aria-label="Key technologies"
-            >
-              VS Code Plugin · Supabase · React · Next.js
-            </p>
-          </div>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            A research‑driven information system that automatically tracks
-            developer activity inside Visual Studio Code, stores the collected
-            events in a Supabase backend, and provides a modern web interface
-            for exploring productivity patterns. The solution combines a
-            lightweight editor plugin, a scalable server component, and an
-            interactive React/Next.js UI to turn raw edits, runs, and compile
-            actions into actionable insights.
-          </p>
-        </section>
+          <i
+            className="ti ti-clock"
+            style={{ fontSize: "13px" }}
+            aria-hidden="true"
+          />
+          Трекер активності
+        </div>
 
-        {/* Short description */}
-        <section
-          className="space-y-3 rounded-3xl bg-white/95 p-7 text-sm leading-6 text-zinc-700 shadow-md shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/85 dark:text-zinc-200"
-          aria-labelledby="landing-description"
+        {/* Title */}
+        <h1
+          style={{
+            fontSize: "36px",
+            fontWeight: 500,
+            color: "var(--color-text-primary)",
+            lineHeight: 1.2,
+            marginBottom: "1rem",
+            maxWidth: "520px",
+          }}
         >
-          <h2
-            id="landing-description"
-            className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
-          >
-            Short description / Короткий опис
-          </h2>
-          <p>
-            The information system is designed to help engineering teams and
-            individual developers better understand how time is spent while
-            working on software projects. A Visual Studio Code plugin quietly
-            captures non‑intrusive activity signals, such as opened files,
-            editing sessions, and run or compile actions. These events are
-            securely streamed to a Supabase backend, where they are normalized,
-            aggregated, and stored for further analysis. On top of this data
-            layer, a web interface built with React and Next.js provides
-            secure authentication and fast server‑side rendering for key views.
-          </p>
-          <p>
-            Within the web UI, users can explore their own history through
-            interactive charts, timelines, and repository dashboards. Time
-            usage is grouped by project, file, programming language, and
-            session, making it easier to identify deep‑work intervals, frequent
-            context switches, and potential bottlenecks in the development
-            process. The goal is not to measure people, but to give
-            developers transparent access to their own data so they can adjust
-            workflows, plan realistic estimates, and reflect on long‑term
-            productivity trends. Thanks to the modular architecture, the system
-            can be extended with new visualizations, custom metrics, or
-            integrations with existing analytics platforms.
-          </p>
-        </section>
+          Відстежуй час роботи у{" "}
+          <span style={{ color: "#F59E0B" }}>воркспейсах</span>
+        </h1>
 
-        {/* Keywords */}
-        <section
-          className="space-y-3 rounded-3xl bg-white/95 p-7 shadow-md shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/85"
-          aria-labelledby="landing-keywords"
+        {/* Sub */}
+        <p
+          style={{
+            fontSize: "16px",
+            color: "var(--color-text-secondary)",
+            lineHeight: 1.7,
+            maxWidth: "420px",
+            marginBottom: "2rem",
+          }}
         >
-          <h2
-            id="landing-keywords"
-            className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
-          >
-            Keywords / Ключові слова
-          </h2>
-          <p className="text-sm text-zinc-700 dark:text-zinc-200">
-            VS Code plugin, developer productivity analytics, time tracking,
-            software engineering metrics, Supabase backend, Next.js dashboard,
-            activity visualization, code statistics, repository insights,
-            session analysis.
-          </p>
-        </section>
+          anz автоматично фіксує скільки часу ти витрачаєш на кожен проєкт, які
+          файли відкриваєш та коли найбільш продуктивний.
+        </p>
 
-        {/* Purpose */}
-        <section
-          className="space-y-3 rounded-3xl bg-white/95 p-7 shadow-md shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/85"
-          aria-labelledby="landing-purpose"
-        >
-          <h2
-            id="landing-purpose"
-            className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
-          >
-            Purpose of the study / Мета дослідження
-          </h2>
-          <p className="text-sm text-zinc-700 dark:text-zinc-200">
-            To design and evaluate an integrated information system that
-            automatically collects fine‑grained development activity in Visual
-            Studio Code, persists it in a cloud‑based Supabase backend, and
-            presents clear visual analytics in a web interface, enabling
-            evidence‑based decisions about personal and team productivity.
-          </p>
-        </section>
-
-        {/* Main tasks */}
-        <section
-          className="space-y-3 rounded-3xl bg-white/95 p-7 shadow-md shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/85"
-          aria-labelledby="landing-tasks"
-        >
-          <h2
-            id="landing-tasks"
-            className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
-          >
-            Main tasks / Основні завдання
-          </h2>
-          <ul className="list-disc space-y-1 pl-5 text-sm text-zinc-700 dark:text-zinc-200">
-            <li>
-              Develop a Visual Studio Code plugin that records user activity and
-              sends structured events to the backend in real time.
-            </li>
-            <li>
-              Implement a Supabase‑based server component for secure storage,
-              aggregation, and querying of activity data.
-            </li>
-            <li>
-              Build a responsive React/Next.js web interface for
-              authentication, visualization of statistics, and repository
-              dashboards.
-            </li>
-            <li>
-              Design intuitive charts, timelines, and reports that highlight
-              time usage, context switching, and deep‑work sessions.
-            </li>
-            <li>
-              Evaluate performance, usability, and the usefulness of insights
-              for developers and teams.
-            </li>
-          </ul>
-        </section>
-
-        {/* Expected result */}
-        <section
-          className="space-y-3 rounded-3xl bg-white/95 p-7 shadow-md shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/85"
-          aria-labelledby="landing-result"
-        >
-          <h2
-            id="landing-result"
-            className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
-          >
-            Expected result / Очікуваний результат
-          </h2>
-          <p className="text-sm text-zinc-700 dark:text-zinc-200">
-            A working prototype of an information system that connects a VS Code
-            plugin, a Supabase backend, and a Next.js web dashboard, delivering
-            fast, SEO‑friendly, and accessible views of development activity
-            across projects. Users should be able to authenticate, review their
-            own sessions, explore statistics per repository, and discover
-            patterns that support more focused and predictable software
-            development.
-          </p>
-        </section>
-
-        {/* Contact information */}
-        <section
-          className="space-y-3 rounded-3xl bg-white/95 p-7 shadow-md shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/85"
-          aria-labelledby="landing-contact"
-        >
-          <h2
-            id="landing-contact"
-            className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50"
-          >
-            Contact information / Контактна інформація
-          </h2>
-          <dl className="grid gap-2 text-sm text-zinc-700 dark:text-zinc-200 sm:grid-cols-2">
-            <div>
-              <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Email
-              </dt>
-              <dd>
-                <a
-                  href="mailto:bogdanbogdanvakulenka@gmail.com"
-                  className="underline underline-offset-2 hover:text-zinc-900 dark:hover:text-zinc-50"
-                >
-                  bogdanbogdanvakulenka@gmail.com
-                </a>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                GitHub
-              </dt>
-              <dd>
-                <a
-                  href="https://github.com/Bogduto"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline underline-offset-2 hover:text-zinc-900 dark:hover:text-zinc-50"
-                >
-                  github.com/Bogduto
-                </a>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-                Telegram
-              </dt>
-              <dd>
-                <a
-                  href="https://t.me/bogduto"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline underline-offset-2 hover:text-zinc-900 dark:hover:text-zinc-50"
-                >
-                  @bogduto
-                </a>
-              </dd>
-            </div>
-          </dl>
-        </section>
-      </main>
+        {/* Actions */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <Link href="/auth" style={btnPrimary}>
+            {GITHUB_ICON}
+            Почати з GitHub
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
