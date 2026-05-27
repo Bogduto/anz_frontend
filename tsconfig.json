@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/app/(private)/repositories/[id]/MostVisitedFilesChart.tss"  ],
   "exclude": ["node_modules"]
 }

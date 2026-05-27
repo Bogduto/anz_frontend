@@ -1,0 +1,138 @@
+export const mockData = {
+  workspace: [
+    {
+      id: 1,
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      status: "active",
+      name: "Main Workspace",
+      href: "main-ws",
+      totalDuration: 12600000, // 3.5h * 10 sessions условно
+      createdAt: "2026-04-06T08:00:00Z",
+    },
+    {
+      id: 2,
+      userId: "550e8400-e29b-41d4-a716-446655440000",
+      status: "active",
+      name: "Side Project",
+      href: "side-proj",
+      totalDuration: 7200000,
+      createdAt: "2026-04-06T09:00:00Z",
+    },
+  ],
+
+  activity: [
+    {
+      id: 10,
+      workspaceId: 1,
+      start: "2026-04-06T09:00:00Z",
+      end: "2026-04-06T11:00:00Z",
+      totalDuration: 7200000,
+      createdAt: "2026-04-06T09:00:00Z",
+    },
+    {
+      id: 11,
+      workspaceId: 1,
+      start: "2026-04-07T10:00:00Z",
+      end: "2026-04-07T12:30:00Z",
+      totalDuration: 9000000,
+      createdAt: "2026-04-07T10:00:00Z",
+    },
+    {
+      id: 12,
+      workspaceId: 2,
+      start: "2026-04-08T14:00:00Z",
+      end: "2026-04-08T16:00:00Z",
+      totalDuration: 7200000,
+      createdAt: "2026-04-08T14:00:00Z",
+    },
+    {
+      id: 13,
+      workspaceId: 1,
+      start: "2026-04-10T08:30:00Z",
+      end: "2026-04-10T11:30:00Z",
+      totalDuration: 10800000,
+      createdAt: "2026-04-10T08:30:00Z",
+    },
+  ],
+
+  file: [
+    {
+      id: 100,
+      activityId: 10,
+      pathname: "/src/app.ts",
+      language: "typescript",
+      name: "app.ts",
+    },
+    {
+      id: 101,
+      activityId: 10,
+      pathname: "/src/utils.ts",
+      language: "typescript",
+      name: "utils.ts",
+    },
+    {
+      id: 102,
+      activityId: 11,
+      pathname: "/src/main.py",
+      language: "python",
+      name: "main.py",
+    },
+    {
+      id: 103,
+      activityId: 12,
+      pathname: "/backend/index.js",
+      language: "javascript",
+      name: "index.js",
+    },
+    {
+      id: 104,
+      activityId: 13,
+      pathname: "/frontend/page.tsx",
+      language: "typescript",
+      name: "page.tsx",
+    },
+  ],
+
+  session: [
+    {
+      id: 1000,
+      activityId: 10,
+      fileId: 100,
+      enterTime: "2026-04-06T09:00:00Z",
+      closeTime: "2026-04-06T10:00:00Z",
+      duration: 3600000,
+    },
+    {
+      id: 1001,
+      activityId: 10,
+      fileId: 101,
+      enterTime: "2026-04-06T10:00:00Z",
+      closeTime: "2026-04-06T11:00:00Z",
+      duration: 3600000,
+    },
+    {
+      id: 1002,
+      activityId: 11,
+      fileId: 102,
+      enterTime: "2026-04-07T10:00:00Z",
+      closeTime: "2026-04-07T12:30:00Z",
+      duration: 9000000,
+    },
+    {
+      id: 1003,
+      activityId: 12,
+      fileId: 103,
+      enterTime: "2026-04-08T14:00:00Z",
+      closeTime: "2026-04-08T16:00:00Z",
+      duration: 7200000,
+    },
+    {
+      id: 1004,
+      activityId: 13,
+      fileId: 104,
+      enterTime: "2026-04-10T08:30:00Z",
+      closeTime: "2026-04-10T11:30:00Z",
+      duration: 10800000,
+    },
+  ],
+};

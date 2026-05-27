@@ -7,14 +7,16 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 type ProvidersProps = {
   children: ReactNode;
 };
-// providers.tsx is used to wrap the app with the QueryClientProvider and ReactQueryDevtools
+
+const staleTime = 1000 * 60
+
 export function Providers({ children }: ProvidersProps) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
-            staleTime: 1000 * 60,
+            staleTime,
             refetchOnWindowFocus: false,
           },
         },
