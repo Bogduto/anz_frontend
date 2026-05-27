@@ -1,5 +1,4 @@
 "use client";
-import { cn } from "@/utils/cn";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import formatTimeDuration from "@/utils/formatTimeDuration";
@@ -10,8 +9,7 @@ import getColor from "./ScheduleChart/getColor";
 import { Activity, Session } from "@/app/(private)/repositories/[id]/types";
 dayjs.extend(duration);
 
-const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
+const DAY_NAMES = ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 const TOTAL_MINUTES = 1440;
 
 function tsToMinutes(ts: number) {
@@ -36,29 +34,49 @@ function ScheduleChart({
   const { headerRef, bodyRef, syncScroll } = useSyncScroll();
   const { zoom, handleWheel } = useZoom({ bodyRef });
 
-  const pxPerMinute = zoom;
-  const totalWidth = TOTAL_MINUTES * pxPerMinute;
+  const totalWidth = TOTAL_MINUTES * zoom;
   const step = getStep(zoom);
-
   const dayEntries = Object.entries(days) as [string, Activity[]][];
-
   const hasActivities = dayEntries.some(([, acts]) => acts.length > 0);
 
+  const cellStyle = (isToday: boolean, isEven: boolean): React.CSSProperties => ({
+    height: "100px",
+    borderBottom: "0.5px solid var(--color-border-tertiary)",
+    background: isToday
+      ? "rgba(245,158,11,0.07)"
+      : isEven
+      ? "var(--color-background-primary)"
+      : "var(--color-background-secondary)",
+    position: "relative",
+  });
+
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-gray-100 shadow-sm dark:border-zinc-800">
+    <div style={{ width: "100%" }}>
       {/* HEADER */}
-      <div className="flex border-b border-gray-100 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-        <div className="flex w-24 flex-shrink-0 items-center justify-center border-r border-gray-100 dark:border-zinc-800">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-300 dark:text-zinc-600">
-            Time
-          </span>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "72px 1fr",
+          borderBottom: "0.5px solid var(--color-border-tertiary)",
+          minWidth: 0,
+        }}
+      >
+        <div
+          style={{
+            padding: "10px 12px",
+            fontSize: "11px",
+            color: "var(--color-text-tertiary)",
+            borderRight: "0.5px solid var(--color-border-tertiary)",
+          }}
+        >
+          Час
         </div>
         <div
           ref={headerRef}
-          className="relative h-10 flex-1 overflow-x-hidden"
+          style={{ overflow: "hidden", position: "relative", height: "32px", minWidth: 0 }}
           onScroll={() => syncScroll("header")}
         >
-          <div style={{ width: totalWidth, position: "relative", height: "100%" }}>
+          <div style={{ width: totalWidth, position: "relative", height: "100%", display: "flex", alignItems: "center" }}>
             {Array.from({ length: TOTAL_MINUTES / step }).map((_, i) => {
               const minutes = i * step;
               const h = Math.floor(minutes / 60);
@@ -66,13 +84,18 @@ function ScheduleChart({
               return (
                 <div
                   key={i}
-                  className="absolute top-0 flex flex-col items-start"
-                  style={{ left: `${Math.round(minutes * zoom)}px` }}
+                  style={{
+                    position: "absolute",
+                    left: `${Math.round(minutes * zoom)}px`,
+                    fontSize: "10px",
+                    color: "var(--color-text-tertiary)",
+                    flexShrink: 0,
+                    paddingLeft: "4px",
+                    whiteSpace: "nowrap",
+                    userSelect: "none",
+                  }}
                 >
-                  <div className="h-2 w-px bg-gray-200 dark:bg-zinc-700" />
-                  <span className="mt-0.5 select-none whitespace-nowrap text-[10px] text-gray-400 dark:text-zinc-500">
-                    {h}:{m.toString().padStart(2, "0")}
-                  </span>
+                  {h}:{m.toString().padStart(2, "0")}
                 </div>
               );
             })}
@@ -81,41 +104,41 @@ function ScheduleChart({
       </div>
 
       {/* BODY */}
-      <div className="flex">
+      <div style={{ display: "grid", gridTemplateColumns: "72px 1fr", minWidth: 0 }}>
         {/* DAY LABELS */}
-        <div className="w-24 flex-shrink-0 border-r border-gray-100 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+        <div style={{ borderRight: "0.5px solid var(--color-border-tertiary)", flexShrink: 0 }}>
           {dayEntries.map(([dateKey, dateValue]) => {
             const date = new Date(dateKey + "T00:00:00Z");
             const dayNum = date.getUTCDate();
             const dayName = DAY_NAMES[date.getUTCDay()];
-
-            const total = dateValue.reduce(
-              (prev, cur) => prev + cur.total_duration,
-              0,
-            );
-
-            const day_activity_total =
-              total === 0 ? "—" : formatTimeDuration(total);
-
             const isToday = isSameUTCDate(date, new Date());
+
+            const total = dateValue.reduce((p, c) => p + c.total_duration, 0);
+            const totalLabel = total === 0 ? "—" : formatTimeDuration(total);
 
             return (
               <div
                 key={dateKey}
-                className={cn(
-                  "flex h-[100px] flex-col items-center justify-center gap-0.5 border-b border-gray-100 last:border-b-0 dark:border-zinc-800",
-                  isToday ? "bg-[hsl(242,93%,76%,0.3)]" : null,
-                )}
+                style={{
+                  padding: "10px 12px",
+                  height: "100px",
+                  borderBottom: "0.5px solid var(--color-border-tertiary)",
+                  background: isToday ? "rgba(245,158,11,0.07)" : undefined,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  boxSizing: "border-box",
+                }}
               >
-                <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 dark:text-zinc-500">
+                <div style={{ fontSize: "11px", color: isToday ? "#F59E0B" : "var(--color-text-tertiary)", textTransform: "uppercase", letterSpacing: "0.3px" }}>
                   {dayName}
-                </span>
-                <span className="text-base font-normal text-gray-500 dark:text-zinc-400">
+                </div>
+                <div style={{ fontSize: "16px", fontWeight: 500, color: isToday ? "#F59E0B" : "var(--color-text-primary)", margin: "2px 0" }}>
                   {dayNum}
-                </span>
-                <span className="text-[12px] font-normal text-gray-500 dark:text-zinc-400">
-                  {day_activity_total}
-                </span>
+                </div>
+                <div style={{ fontSize: "10px", color: "var(--color-text-tertiary)" }}>
+                  {isToday ? "Сьогодні" : totalLabel}
+                </div>
               </div>
             );
           })}
@@ -124,97 +147,112 @@ function ScheduleChart({
         {/* TIMELINE */}
         <div
           ref={bodyRef}
-          className="flex-1 overflow-x-auto"
-          style={{
-            scrollbarWidth: "thin",
-            scrollbarColor: "#e5e7eb transparent",
-          }}
+          style={{ overflow: "auto", scrollbarWidth: "thin", minWidth: 0 }}
           onScroll={() => syncScroll("body")}
           onWheel={handleWheel}
         >
           <div style={{ width: totalWidth, position: "relative" }}>
-            {dayEntries.map(([dateKey, activities], i) => (
-              <div
-                key={dateKey}
-                className={cn(
-                  "relative h-[100px] border-b border-gray-100 last:border-b-0 dark:border-zinc-800",
-                  i % 2 === 0
-                    ? "bg-white dark:bg-zinc-900"
-                    : "bg-gray-50/60 dark:bg-zinc-800/40",
-                )}
-              >
-                {/* Hour gridlines */}
-                {Array.from({ length: 25 }).map((_, h) => (
-                  <div
-                    key={h}
-                    className="absolute bottom-0 top-0 bg-gray-100 dark:bg-zinc-800"
-                    style={{
-                      left: `${Math.round(h * 60 * zoom)}px`,
-                      width: "0.5px",
-                    }}
-                  />
-                ))}
+            {dayEntries.map(([dateKey, activities], i) => {
+              const date = new Date(dateKey + "T00:00:00Z");
+              const isToday = isSameUTCDate(date, new Date());
 
-                {/* Activities */}
-                {activities.map((activity) => {
-                  const startMin = tsToMinutes(activity.start);
-                  let endMin = tsToMinutes(activity.end);
-
-                  if (endMin < startMin) endMin += 1440;
-
-                  const widthMin = Math.max(endMin - startMin, 2);
-                  const color = getColor(activity.workspace_id);
-                  const actSessions: Session[] = sessions[String(activity.id)] ?? [];
-
-                  return (
+              return (
+                <div key={dateKey} style={cellStyle(isToday, i % 2 === 0)}>
+                  {/* Hour gridlines */}
+                  {Array.from({ length: 25 }).map((_, h) => (
                     <div
-                      key={activity.id}
-                      className="absolute bottom-3 top-3 flex items-center overflow-hidden rounded-lg"
+                      key={h}
                       style={{
-                        left: `${Math.round(startMin * zoom)}px`,
-                        width: `${Math.round(widthMin * zoom)}px`,
-                        background: color.bg,
-                        border: `0.5px solid ${color.border}`,
+                        position: "absolute",
+                        top: 0,
+                        bottom: 0,
+                        left: `${Math.round(h * 60 * zoom)}px`,
+                        width: "0.5px",
+                        background: "var(--color-border-tertiary)",
                       }}
-                    >
-                      {actSessions.map((session) => {
-                        const sStart = tsToMinutes(session.enter_time);
-                        const sEnd = tsToMinutes(session.close_time);
-                        const sWidth = Math.max(sEnd - sStart, 1);
-                        const relLeft = sStart - startMin;
+                    />
+                  ))}
 
-                        return (
-                          <div
-                            key={session.id}
-                            className="absolute bottom-0 top-0 flex cursor-pointer items-center justify-center overflow-hidden rounded-md"
-                            style={{
-                              left: `${Math.round(relLeft * zoom)}px`,
-                              width: `${Math.round(sWidth * zoom)}px`,
-                              background: color.bg.replace("0.10", "0.30"),
-                              border: `0.5px solid ${color.border}`,
-                            }}
-                            title={`${session.file?.name ?? "—"} (${session.file?.language ?? "—"})`}
-                          >
-                            <span
-                              className={`truncate px-1 text-[11px] font-medium ${color.text}`}
+                  {/* Activities */}
+                  {activities.map((activity) => {
+                    const startMin = tsToMinutes(activity.start);
+                    let endMin = tsToMinutes(activity.end);
+                    if (endMin < startMin) endMin += 1440;
+
+                    const widthMin = Math.max(endMin - startMin, 2);
+                    const color = getColor(activity.workspace_id);
+                    const actSessions: Session[] = sessions[String(activity.id)] ?? [];
+
+                    return (
+                      <div
+                        key={activity.id}
+                        style={{
+                          position: "absolute",
+                          top: "10px",
+                          height: "32px",
+                          left: `${Math.round(startMin * zoom)}px`,
+                          width: `${Math.round(widthMin * zoom)}px`,
+                          borderRadius: "4px",
+                          background: color.bg,
+                          border: `0.5px solid ${color.border}`,
+                          display: "flex",
+                          alignItems: "center",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {actSessions.map((session) => {
+                          const sStart = tsToMinutes(session.enter_time);
+                          const sEnd = tsToMinutes(session.close_time);
+                          const sWidth = Math.max(sEnd - sStart, 1);
+                          const relLeft = sStart - startMin;
+
+                          return (
+                            <div
+                              key={session.id}
+                              title={`${session.file?.name ?? "—"} (${session.file?.language ?? "—"})`}
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                bottom: 0,
+                                left: `${Math.round(relLeft * zoom)}px`,
+                                width: `${Math.round(sWidth * zoom)}px`,
+                                background: color.bg.replace("0.10", "0.30"),
+                                border: `0.5px solid ${color.border}`,
+                                borderRadius: "4px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                overflow: "hidden",
+                                cursor: "pointer",
+                              }}
                             >
-                              {session.file?.name ?? "—"}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
+                              <span style={{ fontSize: "11px", padding: "0 4px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "var(--color-text-primary)" }}>
+                                {session.file?.name ?? "—"}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })}
 
-            {/* Empty state overlay */}
             {!hasActivities && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-sm text-gray-400 dark:text-zinc-500">
-                  No activities this week
-                </span>
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "13px",
+                  color: "var(--color-text-tertiary)",
+                  pointerEvents: "none",
+                }}
+              >
+                Немає активностей цього тижня
               </div>
             )}
           </div>
