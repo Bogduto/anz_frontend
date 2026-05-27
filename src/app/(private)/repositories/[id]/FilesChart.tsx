@@ -28,23 +28,15 @@ type ChartData = {
   color: ColorResult;
 };
 
-/**
- * Stable color generator (no random, consistent per file name)
- */
 function stringToColor(str: string): ColorResult {
   let hash = 0;
-
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-
   const hue = Math.abs(hash) % 360;
-
-  const saturation = 55;
   const lightness = 55;
-
   return {
-    backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
+    backgroundColor: `hsl(${hue}, 55%, ${lightness}%)`,
     textColor: lightness > 65 ? "hsl(0, 0%, 10%)" : "hsl(0, 0%, 98%)",
   };
 }
@@ -56,26 +48,24 @@ function FilesChart({
   files: FileSession[];
   totalDuration: number;
 }) {
-  /**
-   * 1. Aggregate top files
-   */
   const mostUsed: MostUsedFile[] = useMemo(() => {
-    return files
-      .map((file) => ({
-        file: file.file,
-        totalDuration: file.close_time - file.enter_time,
-      }))
+    // Aggregate durations by file name (handles multiple index.ts etc.)
+    const grouped = new Map<string, number>();
+    files.forEach((f) => {
+      const name = f.file.name;
+      const duration = f.close_time - f.enter_time;
+      grouped.set(name, (grouped.get(name) ?? 0) + duration);
+    });
+
+    return Array.from(grouped.entries())
+      .map(([name, totalDuration]) => ({ file: { name }, totalDuration }))
       .sort((a, b) => b.totalDuration - a.totalDuration)
       .slice(0, 5);
   }, [files]);
 
-  /**
-   * 2. Prepare chart data
-   */
   const chartData: ChartData[] = useMemo(() => {
     return mostUsed.map((item) => {
       const color = stringToColor(item.file.name);
-
       return {
         name: item.file.name,
         value: item.totalDuration,
@@ -86,21 +76,18 @@ function FilesChart({
     });
   }, [mostUsed, totalDuration]);
 
-  console.log("Most used files chart data:", chartData);
-
   if (chartData.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center rounded-3xl border border-dashed border-zinc-300 bg-white/90 p-5 text-sm text-zinc-500 shadow-sm dark:border-zinc-700 dark:bg-zinc-900/80">
+      <div className="mt-4 flex h-32 items-center justify-center rounded-3xl border border-dashed border-zinc-300 bg-white/90 text-sm text-zinc-500 shadow-sm dark:border-zinc-700 dark:bg-zinc-900/80">
         No file usage data available for this day.
       </div>
     );
   }
 
-  
   return (
-    <div className="flex flex-row items-start gap-x-3">
+    <div className="mt-4 flex flex-col items-start gap-4 lg:flex-row">
       {/* PIE CHART */}
-      <div className="w-[500px]">
+      <div className="w-full lg:w-auto">
         <MostVisitedFilesChart chartData={chartData} />
       </div>
 
@@ -111,9 +98,9 @@ function FilesChart({
         </h3>
 
         <div className="flex flex-col gap-3">
-          {chartData.map((item) => (
+          {chartData.map((item, index) => (
             <div
-              key={item.name}
+              key={`${item.name}-${index}`}
               className="rounded-2xl border border-zinc-200 px-4 py-3 text-sm shadow-sm dark:border-zinc-800"
               style={{
                 background: `linear-gradient(to right, ${item.color.backgroundColor} ${item.percent}%, transparent ${item.percent}%)`,
@@ -126,19 +113,12 @@ function FilesChart({
                 >
                   {item.name}
                 </span>
-
                 <span className="text-xs text-zinc-500 dark:text-zinc-400">
                   {item.percent.toFixed(1)}%
                 </span>
               </div>
             </div>
           ))}
-
-          {chartData.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-zinc-300 px-4 py-3 text-sm text-zinc-500 dark:border-zinc-700">
-              No file usage data available for this day.
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -146,5 +126,3 @@ function FilesChart({
 }
 
 export default FilesChart;
-
-
