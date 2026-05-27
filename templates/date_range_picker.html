@@ -1,0 +1,108 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:2rem;background:var(--color-background-tertiary);min-height:420px}
+.picker-row{display:flex;align-items:center;gap:8px;margin-bottom:2rem}
+.picker-field{display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);font-size:13px;color:var(--color-text-secondary);cursor:pointer;min-width:320px}
+.picker-field:hover{border-color:var(--color-border-secondary)}
+.range-text{color:var(--color-text-primary);font-weight:500}
+.sep{color:var(--color-text-tertiary);margin:0 2px}
+.chosen-label{font-size:12px;color:var(--color-text-tertiary)}
+.chosen-val{color:var(--color-text-primary);font-weight:500}
+.cal-icon{color:var(--color-text-tertiary);margin-left:auto;font-size:16px}
+.calendar-wrap{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;display:inline-flex;gap:1.5rem}
+.cal{width:210px}
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-month{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.cal-nav{width:26px;height:26px;border-radius:var(--border-radius-md);border:0.5px solid var(--color-border-tertiary);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--color-text-secondary);font-size:15px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cal-dow{font-size:11px;color:var(--color-text-tertiary);text-align:center;padding:4px 0}
+.cal-day{height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--color-text-primary);border-radius:var(--border-radius-md);cursor:pointer;position:relative}
+.cal-day:hover{background:var(--color-background-secondary)}
+.cal-day.other{color:var(--color-text-tertiary)}
+.cal-day.in-range{background:#EEEDFE;color:#3C3489;border-radius:0}
+.cal-day.range-start{background:#534AB7;color:#EEEDFE;border-radius:var(--border-radius-md) 0 0 var(--border-radius-md)}
+.cal-day.range-end{background:#534AB7;color:#EEEDFE;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0}
+.cal-day.chosen{background:#AFA9EC;color:#26215C;border-radius:var(--border-radius-md)}
+.cal-day.today{font-weight:500}
+.cal-day.today::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:#534AB7}
+.cal-day.range-start.range-end{border-radius:var(--border-radius-md)}
+.divider{width:0.5px;background:var(--color-border-tertiary)}
+</style>
+
+<h2 class="sr-only">Date range picker з вибором діапазону та окремої дати</h2>
+
+<div class="wrap">
+
+  <div class="picker-row">
+    <div class="picker-field">
+      <i class="ti ti-calendar-range" style="font-size:16px;color:var(--color-text-tertiary)" aria-hidden="true"></i>
+      <span>range</span>
+      <span class="range-text">11.05.2026</span>
+      <span class="sep">—</span>
+      <span class="range-text">17.05.2026</span>
+      <span style="margin:0 6px;color:var(--color-border-tertiary)">|</span>
+      <span class="chosen-label">chosen</span>
+      <span class="chosen-val" style="margin-left:6px">2026-05-17</span>
+      <i class="ti ti-calendar cal-icon" aria-hidden="true"></i>
+    </div>
+  </div>
+
+  <div class="calendar-wrap">
+    <div class="cal">
+      <div class="cal-header">
+        <button class="cal-nav"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
+        <span class="cal-month">Травень 2026</span>
+        <button class="cal-nav"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-dow">пн</div><div class="cal-dow">вт</div><div class="cal-dow">ср</div>
+        <div class="cal-dow">чт</div><div class="cal-dow">пт</div><div class="cal-dow">сб</div><div class="cal-dow">нд</div>
+
+        <div class="cal-day other">28</div><div class="cal-day other">29</div><div class="cal-day other">30</div>
+        <div class="cal-day other">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day">4</div>
+
+        <div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div>
+        <div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div><div class="cal-day">11 </div>
+
+        <div class="cal-day range-start">11</div><div class="cal-day in-range">12</div><div class="cal-day in-range">13</div>
+        <div class="cal-day in-range">14</div><div class="cal-day in-range">15</div><div class="cal-day in-range">16</div><div class="cal-day range-end chosen">17</div>
+
+        <div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div>
+        <div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div>
+
+        <div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day today">27</div>
+        <div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day">31</div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="cal">
+      <div class="cal-header">
+        <button class="cal-nav"><i class="ti ti-chevron-left" aria-hidden="true"></i></button>
+        <span class="cal-month">Червень 2026</span>
+        <button class="cal-nav"><i class="ti ti-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-dow">пн</div><div class="cal-dow">вт</div><div class="cal-dow">ср</div>
+        <div class="cal-dow">чт</div><div class="cal-dow">пт</div><div class="cal-dow">сб</div><div class="cal-dow">нд</div>
+
+        <div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div>
+        <div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div>
+
+        <div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div>
+        <div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div>
+
+        <div class="cal-day">15</div><div class="cal-day">16</div><div class="cal-day">17</div>
+        <div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div>
+
+        <div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div>
+        <div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div>
+
+        <div class="cal-day">29</div><div class="cal-day">30</div>
+      </div>
+    </div>
+  </div>
+
+</div>

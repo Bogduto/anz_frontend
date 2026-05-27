@@ -1,0 +1,86 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:56px;background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.nav-brand{font-size:18px;font-weight:500;color:var(--color-text-primary)}
+.nav-links{display:flex;gap:4px;margin-left:1.5rem}
+.nav-link{font-size:14px;color:var(--color-text-secondary);padding:6px 12px;border-radius:var(--border-radius-md);cursor:pointer}
+.nav-link.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.signin-btn-nav{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:500;padding:7px 14px;border-radius:var(--border-radius-md);background:#534AB7;color:#EEEDFE;border:none;cursor:pointer}
+.page{background:var(--color-background-tertiary);min-height:580px;display:flex;align-items:center;justify-content:center;padding:2rem}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:2rem;width:100%;max-width:380px}
+.card-brand{display:flex;align-items:center;gap:10px;margin-bottom:1.75rem}
+.brand-mark{width:36px;height:36px;border-radius:var(--border-radius-md);background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:#534AB7}
+.brand-name{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.card-title{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+.card-sub{font-size:14px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:1.75rem}
+.github-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 16px;border-radius:var(--border-radius-md);background:#24292F;color:#fff;border:none;cursor:pointer;font-size:14px;font-weight:500;margin-bottom:1.5rem}
+.github-btn:hover{background:#2f363d}
+.github-icon{width:18px;height:18px;flex-shrink:0}
+.divider{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem}
+.divider-line{flex:1;height:0.5px;background:var(--color-border-tertiary)}
+.divider-text{font-size:12px;color:var(--color-text-tertiary)}
+.feature-list{display:flex;flex-direction:column;gap:10px;margin-bottom:1.75rem}
+.feature-row{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--color-text-secondary)}
+.feature-icon{width:28px;height:28px;border-radius:var(--border-radius-md);background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-size:14px;color:#534AB7;flex-shrink:0}
+.card-footer{font-size:12px;color:var(--color-text-tertiary);text-align:center;line-height:1.6}
+.card-footer a{color:#534AB7;text-decoration:none}
+</style>
+
+<h2 class="sr-only">Сторінка авторизації ANZ через GitHub</h2>
+
+<div class="nav">
+  <div style="display:flex;align-items:center">
+    <span class="nav-brand">anz</span>
+    <nav class="nav-links">
+      <a class="nav-link active">Landing</a>
+      <a class="nav-link">Workspaces</a>
+    </nav>
+  </div>
+  <button class="signin-btn-nav">
+    <svg class="github-icon" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.341-3.369-1.341-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+    Sign in with GitHub
+  </button>
+</div>
+
+<div class="page">
+  <div class="card">
+    <div class="card-brand">
+      <div class="brand-mark">a</div>
+      <span class="brand-name">anz</span>
+    </div>
+
+    <div class="card-title">Увійти в акаунт</div>
+    <div class="card-sub">Використай свій GitHub акаунт для доступу до воркспейсів та статистики активності.</div>
+
+    <button class="github-btn">
+      <svg class="github-icon" viewBox="0 0 24 24" fill="white" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.341-3.369-1.341-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844a9.59 9.59 0 012.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      Continue with GitHub
+    </button>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">що ти отримаєш</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="feature-list">
+      <div class="feature-row">
+        <div class="feature-icon"><i class="ti ti-clock" aria-hidden="true"></i></div>
+        Трекінг часу по воркспейсах
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon"><i class="ti ti-chart-bar" aria-hidden="true"></i></div>
+        Детальна статистика активності
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon"><i class="ti ti-file-analytics" aria-hidden="true"></i></div>
+        Аналіз використання файлів
+      </div>
+    </div>
+
+    <div class="card-footer">
+      Продовжуючи, ти погоджуєшся з <a href="#">умовами використання</a> та <a href="#">політикою конфіденційності</a>.
+    </div>
+  </div>
+</div>
