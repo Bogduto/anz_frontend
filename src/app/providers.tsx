@@ -8,7 +8,7 @@ type ProvidersProps = {
   children: ReactNode;
 };
 
-const staleTime = 1000 * 60
+const staleTime = 1000 * 60;
 
 export function Providers({ children }: ProvidersProps) {
   const [queryClient] = useState(
@@ -26,7 +26,9 @@ export function Providers({ children }: ProvidersProps) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      <ReactQueryDevtools initialIsOpen={false} />
+      {process.env.NODE_ENV === "development" && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </QueryClientProvider>
   );
 }

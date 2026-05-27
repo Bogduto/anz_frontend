@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <Providers>
           <header
-            className="bg-white/80 px-4 py-4 backdrop-blur-sm sm:px-8 dark:bg-black/70"
+            className="sticky top-0 z-50 bg-white/80 px-4 py-4 backdrop-blur-sm sm:px-8 dark:bg-black/70"
             aria-label="Main navigation"
           >
             <div className=" flex w-full items-center justify-between gap-4">
