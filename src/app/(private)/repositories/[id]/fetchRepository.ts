@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { WeekStats } from "./types";
+import { Workspace, WeekStats } from "./types";
 
 export interface FetchRepositoryParams {
   id: string;
@@ -76,10 +76,9 @@ const fetchRepository = async ({
       weekStats,
     };
   } catch (error) {
-    console.log(error);
-    return { error: "Invalid workspace ID", message: "ID must be a number" };
+    console.error(error);
+    return { error: "Unexpected error", message: "Something went wrong" };
   }
 };
 
 export default fetchRepository;
-
