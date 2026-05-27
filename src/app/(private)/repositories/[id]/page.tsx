@@ -38,7 +38,6 @@ export default async function RepositoryDetailPage({
   const total_duration = stats.weekStats.workspace_total_spent;
   const week_count = countTotalDurationWeek(stats.weekStats.days);
 
-  // All activities for the selected day (not just the first one)
   const dayActivityList = stats.weekStats.days?.[day] ?? [];
   const files = dayActivityList.flatMap(
     (activity) => stats.weekStats.sessions[String(activity.id)] ?? []
@@ -49,67 +48,137 @@ export default async function RepositoryDetailPage({
     0
   );
 
+  const dayLabel = new Date(day + "T00:00:00").toLocaleDateString("uk-UA", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   return (
-    <div className="min-h-screen bg-zinc-50 px-4 py-4 font-sans text-zinc-900 dark:bg-black dark:text-zinc-50 sm:px-8">
-      <main className="flex w-full flex-col gap-6">
+    <div
+      style={{
+        background: "var(--color-background-tertiary)",
+        minHeight: "calc(100vh - 56px)",
+        padding: "2rem",
+      }}
+    >
+      <main style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
 
         {/* HEADER */}
-        <section className="rounded-3xl bg-white/90 p-7 shadow-md shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/80">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex flex-col gap-y-2">
-              <h1 className="text-2xl font-semibold tracking-tight">
-                {stats.workspace.name}
-              </h1>
-              <span className="text-sm font-light text-zinc-500">
-                {stats.workspace.href}
-              </span>
+        <div
+          style={{
+            background: "var(--color-background-primary)",
+            border: "0.5px solid var(--color-border-tertiary)",
+            borderRadius: "var(--border-radius-lg)",
+            padding: "1.25rem 1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+            <div
+              style={{
+                width: "44px",
+                height: "44px",
+                borderRadius: "var(--border-radius-md)",
+                background: "var(--color-brand-light)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "22px",
+                color: "var(--color-brand)",
+              }}
+            >
+              <i className="ti ti-clock" aria-hidden="true" />
             </div>
-
             <div>
-              <div className="text-2xl font-semibold">
-                {formatTimeDuration(total_duration)}
+              <div style={{ fontSize: "18px", fontWeight: 500, color: "var(--color-text-primary)", marginBottom: "3px" }}>
+                {stats.workspace.name}
               </div>
-              <div className="text-xs text-zinc-500">Total duration</div>
+              <div style={{ fontSize: "12px", color: "var(--color-brand)", fontFamily: "var(--font-mono)" }}>
+                /{stats.workspace.href}
+              </div>
             </div>
           </div>
-        </section>
+
+          <div style={{ textAlign: "right" }}>
+            <div style={{ fontSize: "22px", fontWeight: 500, color: "var(--color-text-primary)" }}>
+              {formatTimeDuration(total_duration)}
+            </div>
+            <div style={{ fontSize: "12px", color: "var(--color-text-tertiary)", marginTop: "2px" }}>
+              Загальна тривалість
+            </div>
+          </div>
+        </div>
 
         {/* DATE PICKER */}
-        <Suspense fallback={<div className="h-10 w-[400px] animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />}>
+        <Suspense
+          fallback={
+            <div style={{ height: "30px", width: "320px", borderRadius: "var(--border-radius-md)", background: "var(--color-background-secondary)" }} />
+          }
+        >
           <WeeklyDatePicker />
         </Suspense>
 
-        {/* CHART */}
-        <ScheduleChart
-          days={stats.weekStats.days}
-          sessions={stats.weekStats.sessions}
-        />
+        {/* SCHEDULE CHART */}
+        <div
+          style={{
+            background: "var(--color-background-primary)",
+            border: "0.5px solid var(--color-border-tertiary)",
+            borderRadius: "var(--border-radius-lg)",
+            overflow: "hidden",
+          }}
+        >
+          <ScheduleChart
+            days={stats.weekStats.days}
+            sessions={stats.weekStats.sessions}
+          />
+        </div>
 
         {/* STATS */}
-        <section className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div className="rounded-3xl bg-white/90 p-6 shadow-md shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/80">
-              <h3 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                Weekly total
-              </h3>
-              <p className="text-3xl font-semibold">
-                {formatTimeDuration(week_count)}
-              </p>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px" }}>
+          <div
+            style={{
+              background: "var(--color-background-primary)",
+              border: "0.5px solid var(--color-border-tertiary)",
+              borderRadius: "var(--border-radius-lg)",
+              padding: "1.25rem",
+            }}
+          >
+            <div style={{ fontSize: "12px", color: "var(--color-text-tertiary)", marginBottom: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
+              <i className="ti ti-chart-bar" style={{ fontSize: "15px" }} aria-hidden="true" />
+              Активність за тиждень
             </div>
-
-            <div className="rounded-3xl bg-white/90 p-6 shadow-md shadow-black/5 backdrop-blur-sm dark:bg-zinc-900/80">
-              <h3 className="mb-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                {day}
-              </h3>
-              <p className="text-3xl font-semibold">
-                {formatTimeDuration(totalDuration)}
-              </p>
+            <div style={{ fontSize: "26px", fontWeight: 500, color: "var(--color-text-primary)" }}>
+              {formatTimeDuration(week_count)}
             </div>
           </div>
 
-          {/* FILES */}
-          <FilesChart totalDuration={totalDuration} files={files} />
-        </section>
+          <div
+            style={{
+              background: "var(--color-background-primary)",
+              border: "0.5px solid var(--color-border-tertiary)",
+              borderRadius: "var(--border-radius-lg)",
+              padding: "1.25rem",
+            }}
+          >
+            <div style={{ fontSize: "12px", color: "var(--color-text-tertiary)", marginBottom: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
+              <i className="ti ti-sun" style={{ fontSize: "15px" }} aria-hidden="true" />
+              Активність сьогодні
+            </div>
+            <div style={{ fontSize: "26px", fontWeight: 500, color: "var(--color-text-primary)" }}>
+              {formatTimeDuration(totalDuration)}
+            </div>
+            <div style={{ fontSize: "12px", color: "var(--color-text-tertiary)", marginTop: "4px" }}>
+              {dayLabel}
+            </div>
+          </div>
+        </div>
+
+        {/* FILES */}
+        <FilesChart totalDuration={totalDuration} files={files} />
+
       </main>
     </div>
   );

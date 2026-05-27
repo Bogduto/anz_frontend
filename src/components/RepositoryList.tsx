@@ -1,6 +1,12 @@
 import { Workspace } from "@/app/(private)/repositories/[id]/types";
 import { createClient } from "@/lib/supabase/server";
-import Link from "next/link";
+import WorkspaceCard from "./WorkspaceCard";
+
+const ACCENT_COLORS = [
+  { accent: "#F59E0B", iconBg: "rgba(245,158,11,0.12)", iconText: "#F59E0B", bar: "#F59E0B" },
+  { accent: "#FB7185", iconBg: "rgba(251,113,133,0.12)", iconText: "#FB7185", bar: "#FB7185" },
+  { accent: "#F5F0E8", iconBg: "rgba(245,240,232,0.10)", iconText: "#F5F0E8", bar: "#F5F0E8" },
+];
 
 const fetchRepositories = async (): Promise<Workspace[] | { error: string; message: string }> => {
   try {
@@ -12,10 +18,7 @@ const fetchRepositories = async (): Promise<Workspace[] | { error: string; messa
     } = await supabase.auth.getUser();
 
     if (userError || !user) {
-      return {
-        error: "Unauthorized",
-        message: userError?.message ?? "No user session",
-      };
+      return { error: "Unauthorized", message: userError?.message ?? "No user session" };
     }
 
     const { data: repositories, error: fetchError } = await supabase
@@ -25,10 +28,7 @@ const fetchRepositories = async (): Promise<Workspace[] | { error: string; messa
       .eq("user_id", user.id);
 
     if (fetchError) {
-      return {
-        error: "Failed to fetch workspaces",
-        message: fetchError.message,
-      };
+      return { error: "Failed to fetch workspaces", message: fetchError.message };
     }
 
     return repositories ?? [];
@@ -43,7 +43,7 @@ export async function RepositoryList() {
 
   if ("error" in result) {
     return (
-      <div className="mt-8 text-center text-sm text-red-500">
+      <div style={{ marginTop: "2rem", textAlign: "center", fontSize: "14px", color: "#ef4444" }}>
         {result.message}
       </div>
     );
@@ -51,24 +51,33 @@ export async function RepositoryList() {
 
   if (result.length === 0) {
     return (
-      <div className="mt-8 text-center text-sm text-zinc-500">
-        No repositories found.
+      <div style={{ marginTop: "2rem", textAlign: "center", fontSize: "14px", color: "var(--color-text-tertiary)" }}>
+        Воркспейсів не знайдено.
       </div>
     );
   }
 
+  const maxDuration = Math.max(...result.map((r) => r.total_duration ?? 0), 1);
+
   return (
-    <div className="mt-8 grid gap-5 md:grid-cols-2">
-      {result.map((repo) => (
-        <Link
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))",
+        gap: "14px",
+      }}
+    >
+      {result.map((repo, index) => (
+        <WorkspaceCard
           key={repo.id}
-          href={`/repositories/${repo.id}`}
-          className="group flex flex-col rounded-xl border border-zinc-200 bg-white/70 p-5 shadow-sm ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-zinc-700"
-        >
-          <h2 className="text-base font-semibold text-zinc-900 group-hover:text-zinc-950 dark:text-zinc-50">
-            {repo.name}
-          </h2>
-        </Link>
+          id={repo.id}
+          name={repo.name}
+          href={repo.href}
+          total_duration={repo.total_duration}
+          created_at={repo.created_at}
+          color={ACCENT_COLORS[index % ACCENT_COLORS.length]}
+          barWidth={Math.round(((repo.total_duration ?? 0) / maxDuration) * 100)}
+        />
       ))}
     </div>
   );

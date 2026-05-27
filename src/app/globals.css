@@ -1,26 +1,43 @@
 @import "tailwindcss";
 
+/* ── Design tokens — Warm Dark + Cream ─────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Backgrounds */
+  --color-background-primary:   #2C2824;   /* card / surface          */
+  --color-background-secondary: #231F1C;   /* elevated / hover rows   */
+  --color-background-tertiary:  #1C1917;   /* page body               */
+
+  /* Borders */
+  --color-border-tertiary:  rgba(255,255,255,0.08);
+  --color-border-secondary: rgba(255,255,255,0.15);
+
+  /* Text */
+  --color-text-primary:   #FFFFFF;
+  --color-text-secondary: rgba(255,255,255,0.55);
+  --color-text-tertiary:  rgba(255,255,255,0.30);
+
+  /* Radii */
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+
+  /* Fonts */
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Accents */
+  --color-brand:       #F5F0E8;                  /* cream — primary CTA   */
+  --color-brand-light: rgba(245,240,232,0.10);   /* cream tinted bg       */
+  --color-brand-mid:   rgba(245,240,232,0.55);   /* cream mid             */
+  --color-amber:       #F59E0B;                  /* secondary accent      */
+  --color-rose:        #FB7185;                  /* tertiary accent       */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ── Base ───────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-background-tertiary);
+  color: var(--color-text-primary);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }

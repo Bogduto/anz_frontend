@@ -9,16 +9,9 @@ export type ColorResult = {
 };
 
 type FileSession = {
-  file: {
-    name: string;
-  };
+  file: { name: string };
   enter_time: number;
   close_time: number;
-};
-
-type MostUsedFile = {
-  file: FileSession["file"];
-  totalDuration: number;
 };
 
 type ChartData = {
@@ -28,18 +21,7 @@ type ChartData = {
   color: ColorResult;
 };
 
-function stringToColor(str: string): ColorResult {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const hue = Math.abs(hash) % 360;
-  const lightness = 55;
-  return {
-    backgroundColor: `hsl(${hue}, 55%, ${lightness}%)`,
-    textColor: lightness > 65 ? "hsl(0, 0%, 10%)" : "hsl(0, 0%, 98%)",
-  };
-}
+const FILE_COLORS = ["#F59E0B", "#FB7185", "#60A5FA", "#34D399", "#F5F0E8"];
 
 function FilesChart({
   files,
@@ -48,74 +30,112 @@ function FilesChart({
   files: FileSession[];
   totalDuration: number;
 }) {
-  const mostUsed: MostUsedFile[] = useMemo(() => {
-    // Aggregate durations by file name (handles multiple index.ts etc.)
+  const chartData: ChartData[] = useMemo(() => {
     const grouped = new Map<string, number>();
     files.forEach((f) => {
       const name = f.file.name;
-      const duration = f.close_time - f.enter_time;
-      grouped.set(name, (grouped.get(name) ?? 0) + duration);
+      grouped.set(name, (grouped.get(name) ?? 0) + (f.close_time - f.enter_time));
     });
 
     return Array.from(grouped.entries())
-      .map(([name, totalDuration]) => ({ file: { name }, totalDuration }))
-      .sort((a, b) => b.totalDuration - a.totalDuration)
-      .slice(0, 5);
-  }, [files]);
-
-  const chartData: ChartData[] = useMemo(() => {
-    return mostUsed.map((item) => {
-      const color = stringToColor(item.file.name);
-      return {
-        name: item.file.name,
-        value: item.totalDuration,
-        percent:
-          totalDuration === 0 ? 0 : (item.totalDuration / totalDuration) * 100,
-        color,
-      };
-    });
-  }, [mostUsed, totalDuration]);
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .map(([name, value], i) => ({
+        name,
+        value,
+        percent: totalDuration === 0 ? 0 : (value / totalDuration) * 100,
+        color: {
+          backgroundColor: FILE_COLORS[i % FILE_COLORS.length],
+          textColor: "#fff",
+        },
+      }));
+  }, [files, totalDuration]);
 
   if (chartData.length === 0) {
     return (
-      <div className="mt-4 flex h-32 items-center justify-center rounded-3xl border border-dashed border-zinc-300 bg-white/90 text-sm text-zinc-500 shadow-sm dark:border-zinc-700 dark:bg-zinc-900/80">
-        No file usage data available for this day.
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "80px",
+          borderRadius: "var(--border-radius-lg)",
+          border: "0.5px dashed var(--color-border-secondary)",
+          background: "var(--color-background-primary)",
+          fontSize: "13px",
+          color: "var(--color-text-tertiary)",
+        }}
+      >
+        Немає даних про файли за цей день.
       </div>
     );
   }
 
   return (
-    <div className="mt-4 flex flex-col items-start gap-4 lg:flex-row">
+    <div style={{ display: "grid", gridTemplateColumns: "200px 1fr", gap: "14px" }}>
       {/* PIE CHART */}
-      <div className="w-full lg:w-auto">
+      <div
+        style={{
+          background: "var(--color-background-primary)",
+          border: "0.5px solid var(--color-border-tertiary)",
+          borderRadius: "var(--border-radius-lg)",
+          padding: "1.25rem",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "16px",
+        }}
+      >
+        <div style={{ fontSize: "13px", fontWeight: 500, color: "var(--color-text-primary)", alignSelf: "flex-start" }}>
+          Розподіл файлів
+        </div>
         <MostVisitedFilesChart chartData={chartData} />
+        <div style={{ width: "100%" }}>
+          {chartData.map((item) => (
+            <div key={item.name} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", fontSize: "12px", color: "var(--color-text-secondary)" }}>
+              <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: item.color.backgroundColor, flexShrink: 0 }} />
+              <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</span>
+              <span style={{ marginLeft: "auto", fontWeight: 500, color: "var(--color-text-primary)" }}>
+                {item.percent.toFixed(1)}%
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* LIST */}
-      <div className="w-full rounded-3xl border border-zinc-200 bg-white/90 p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/80">
-        <h3 className="mb-4 text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-          Most Used Files
-        </h3>
+      {/* FILES LIST */}
+      <div
+        style={{
+          background: "var(--color-background-primary)",
+          border: "0.5px solid var(--color-border-tertiary)",
+          borderRadius: "var(--border-radius-lg)",
+          padding: "1.25rem",
+        }}
+      >
+        <div style={{ fontSize: "13px", fontWeight: 500, color: "var(--color-text-primary)", marginBottom: "1rem" }}>
+          Найбільш використовувані файли
+        </div>
 
-        <div className="flex flex-col gap-3">
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {chartData.map((item, index) => (
-            <div
-              key={`${item.name}-${index}`}
-              className="rounded-2xl border border-zinc-200 px-4 py-3 text-sm shadow-sm dark:border-zinc-800"
-              style={{
-                background: `linear-gradient(to right, ${item.color.backgroundColor} ${item.percent}%, transparent ${item.percent}%)`,
-              }}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <span
-                  style={{ color: item.color.textColor }}
-                  className="font-medium"
-                >
+            <div key={`${item.name}-${index}`}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "5px" }}>
+                <span style={{ fontSize: "13px", fontFamily: "var(--font-mono)", color: "var(--color-text-primary)" }}>
                   {item.name}
                 </span>
-                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                <span style={{ fontSize: "12px", color: "var(--color-text-tertiary)" }}>
                   {item.percent.toFixed(1)}%
                 </span>
+              </div>
+              <div style={{ height: "6px", background: "var(--color-background-secondary)", borderRadius: "3px" }}>
+                <div
+                  style={{
+                    height: "6px",
+                    borderRadius: "3px",
+                    background: item.color.backgroundColor,
+                    width: `${item.percent}%`,
+                  }}
+                />
               </div>
             </div>
           ))}

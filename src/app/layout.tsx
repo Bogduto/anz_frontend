@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Repository Dashboard",
+  title: "anz — Code Activity Insights",
   description: "Repository statistics with sessions, slices, and activity.",
 };
 
@@ -27,44 +27,76 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+        />
+      </head>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Providers>
           <header
-            className="sticky top-0 z-50 bg-white/80 px-4 py-4 backdrop-blur-sm sm:px-8 dark:bg-black/70"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "0 2rem",
+              height: "56px",
+              background: "#1C1917",
+              borderBottom: "0.5px solid rgba(255,255,255,0.08)",
+              position: "sticky",
+              top: 0,
+              zIndex: 50,
+            }}
             aria-label="Main navigation"
           >
-            <div className=" flex w-full items-center justify-between gap-4">
-              <div className="flex items-center gap-6">
+            <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+              <Link
+                href="/"
+                style={{
+                  fontSize: "18px",
+                  fontWeight: 500,
+                  color: "var(--color-text-primary)",
+                  letterSpacing: "-0.5px",
+                  textDecoration: "none",
+                }}
+              >
+                anz
+              </Link>
+              <nav
+                style={{ display: "flex", gap: "4px" }}
+                aria-label="Primary"
+              >
+                <Link
+                  href="/landing"
+                  style={{
+                    fontSize: "14px",
+                    color: "var(--color-text-secondary)",
+                    padding: "6px 12px",
+                    borderRadius: "var(--border-radius-md)",
+                    textDecoration: "none",
+                  }}
+                >
+                  Landing
+                </Link>
                 <Link
                   href="/"
-                  className="text-lg font-semibold tracking-tight"
-                  aria-label="Go to repositories dashboard"
+                  style={{
+                    fontSize: "14px",
+                    color: "var(--color-text-secondary)",
+                    padding: "6px 12px",
+                    borderRadius: "var(--border-radius-md)",
+                    textDecoration: "none",
+                  }}
                 >
-                  anz
+                  Workspaces
                 </Link>
-                <nav
-                  aria-label="Primary"
-                  className="flex items-center gap-1 rounded-full bg-zinc-100/80 p-1 text-sm text-zinc-700 shadow-sm shadow-black/5 dark:bg-zinc-900/70 dark:text-zinc-200"
-                >
-                  <Link
-                    href="/landing"
-                    className="rounded-full px-3 py-1 hover:bg-white hover:text-zinc-900 dark:hover:bg-zinc-800"
-                  >
-                    Landing
-                  </Link>
-                  <Link
-                    href="/"
-                    className="rounded-full px-3 py-1 hover:bg-white hover:text-zinc-900 dark:hover:bg-zinc-800"
-                  >
-                    Repositories
-                  </Link>
-                </nav>
-              </div>
-              <SignButton />
+              </nav>
             </div>
+
+            <SignButton />
           </header>
+
           {children}
         </Providers>
       </body>

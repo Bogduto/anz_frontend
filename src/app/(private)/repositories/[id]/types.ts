@@ -2,6 +2,8 @@ export interface Workspace {
   id: number;
   name: string;
   href: string;
+  total_duration: number | null;
+  created_at: string;
 }
 
 
