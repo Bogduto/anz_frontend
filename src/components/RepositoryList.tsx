@@ -2,7 +2,7 @@ import { Workspace } from "@/app/(private)/repositories/[id]/types";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 
-const fetchRepositories = async () => {
+const fetchRepositories = async (): Promise<Workspace[] | { error: string; message: string }> => {
   try {
     const supabase = await createClient();
 
@@ -31,39 +31,43 @@ const fetchRepositories = async () => {
       };
     }
 
-    // make request to github api and get repository logo if exist and some description 
-
-    return repositories
+    return repositories ?? [];
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return { error: "Unexpected error", message: "Failed to load repositories" };
   }
 };
 
 export async function RepositoryList() {
-  const repositories = await fetchRepositories() as Workspace[];
+  const result = await fetchRepositories();
 
-  if (!repositories) return <div>something went wrong</div>;
-  
-  if (repositories.length === 0) {
-    return <div className="mt-8 text-center text-sm text-zinc-500">No repositories found.</div>;
+  if ("error" in result) {
+    return (
+      <div className="mt-8 text-center text-sm text-red-500">
+        {result.message}
+      </div>
+    );
+  }
+
+  if (result.length === 0) {
+    return (
+      <div className="mt-8 text-center text-sm text-zinc-500">
+        No repositories found.
+      </div>
+    );
   }
 
   return (
     <div className="mt-8 grid gap-5 md:grid-cols-2">
-      {repositories.map((repo) => (
+      {result.map((repo) => (
         <Link
           key={repo.id}
           href={`/repositories/${repo.id}`}
           className="group flex flex-col rounded-xl border border-zinc-200 bg-white/70 p-5 shadow-sm ring-1 ring-black/5 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-zinc-700"
         >
-          <div className="flex items-start justify-between gap-3">
-            <h2 className="text-base font-semibold text-zinc-900 group-hover:text-zinc-950 dark:text-zinc-50">
-              {repo.name}
-            </h2>
-            <span className="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
-              {/* {repo.status} */}
-            </span>
-          </div>
+          <h2 className="text-base font-semibold text-zinc-900 group-hover:text-zinc-950 dark:text-zinc-50">
+            {repo.name}
+          </h2>
         </Link>
       ))}
     </div>
