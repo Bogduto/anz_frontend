@@ -1,16 +1,12 @@
 "use client";
 import { createClient } from "@/lib/supabase/client";
-import React from "react";
-import { useUser } from "./useUser";
 
 export default function AuthPage() {
-  const user = useUser();
-
-  const handleGitHubSignIn = () => {
+  const handleGitHubSignIn = async () => {
     try {
       const supabase = createClient();
 
-      supabase.auth.signInWithOAuth({
+      await supabase.auth.signInWithOAuth({
         provider: "github",
         options: {
           redirectTo: `${window.location.origin}/api/auth/callback`,
@@ -45,13 +41,6 @@ export default function AuthPage() {
             </span>
             <span>Continue with GitHub</span>
           </button>
-        </div>
-
-        <div className="mt-2 space-y-1 text-xs text-zinc-500 dark:text-zinc-400">
-          <p>
-            This is a mock GitHub authentication screen. Wire this button up to
-            your real GitHub OAuth / NextAuth configuration when you are ready.
-          </p>
         </div>
       </main>
     </div>
