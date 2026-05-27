@@ -4,13 +4,14 @@ dayjs.extend(duration);
 
 const minDuration = 3600000; // one hour
 
+const formatTimeDuration = (ms: number): string => {
+  if (ms <= 0) return "0 min";
 
-const formatTimeDuration = (duration: number): string => {
-    if (duration >= minDuration) {
-        return `${dayjs.duration(duration).asHours().toFixed(1)} hours`;
-    }
+  if (ms >= minDuration) {
+    return `${dayjs.duration(ms).asHours().toFixed(1)} h`;
+  }
 
-    return `${Math.floor(dayjs.duration(duration).asMinutes()).toFixed(1)} minutes`;
+  return `${Math.floor(dayjs.duration(ms).asMinutes())} min`;
 };
 
 export default formatTimeDuration;

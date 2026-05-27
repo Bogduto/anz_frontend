@@ -1,8 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!;
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-export default supabase;
+// Use the SSR-compatible client from @/lib/supabase/client instead of this file.
+// This file is kept for reference only and should not be imported directly.
+export {};
