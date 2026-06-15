@@ -25,7 +25,8 @@ const fetchRepositories = async (): Promise<Workspace[] | { error: string; messa
       .schema("itallo")
       .from("workspace")
       .select("*")
-      .eq("user_id", user.id);
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
 
     if (fetchError) {
       return { error: "Failed to fetch workspaces", message: fetchError.message };
