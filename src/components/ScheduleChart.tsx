@@ -1,6 +1,7 @@
 "use client";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
+import { useState } from "react";
 import formatTimeDuration from "@/utils/formatTimeDuration";
 import isSameUTCDate from "./ScheduleChart/todayHightling";
 import useSyncScroll from "./ScheduleChart/useSyncScroll";
@@ -8,6 +9,21 @@ import useZoom from "./ScheduleChart/useZoom";
 import getColor from "./ScheduleChart/getColor";
 import { Activity, Session } from "@/app/(private)/repositories/[id]/types";
 dayjs.extend(duration);
+
+type TooltipInfo = {
+  x: number;
+  y: number;
+  name: string;
+  lang: string;
+  start: string;
+  end: string;
+  duration: string;
+};
+
+function formatTs(ts: number): string {
+  const d = new Date(ts);
+  return `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+}
 
 const DAY_NAMES = ["Нд", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 const TOTAL_MINUTES = 1440;
@@ -33,6 +49,7 @@ function ScheduleChart({
 }) {
   const { headerRef, bodyRef, syncScroll } = useSyncScroll();
   const { zoom, handleWheel } = useZoom({ bodyRef });
+  const [tooltip, setTooltip] = useState<TooltipInfo | null>(null);
 
   const totalWidth = TOTAL_MINUTES * zoom;
   const step = getStep(zoom);
@@ -51,7 +68,42 @@ function ScheduleChart({
   });
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", position: "relative" }}>
+      {tooltip && (
+        <div
+          style={{
+            position: "fixed",
+            top: tooltip.y + 14,
+            left: tooltip.x + 14,
+            zIndex: 1000,
+            background: "var(--color-background-primary)",
+            border: "0.5px solid var(--color-border-tertiary)",
+            borderRadius: "var(--border-radius-md)",
+            padding: "10px 14px",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
+            pointerEvents: "none",
+            minWidth: "160px",
+          }}
+        >
+          <div style={{ fontSize: "13px", fontWeight: 500, color: "var(--color-text-primary)", marginBottom: "8px", fontFamily: "var(--font-mono)" }}>
+            {tooltip.name}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", fontSize: "12px" }}>
+              <span style={{ color: "var(--color-text-tertiary)" }}>Початок</span>
+              <span style={{ color: "var(--color-text-primary)" }}>{tooltip.start}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", fontSize: "12px" }}>
+              <span style={{ color: "var(--color-text-tertiary)" }}>Кінець</span>
+              <span style={{ color: "var(--color-text-primary)" }}>{tooltip.end}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: "16px", fontSize: "12px", marginTop: "4px", paddingTop: "6px", borderTop: "0.5px solid var(--color-border-tertiary)" }}>
+              <span style={{ color: "var(--color-text-tertiary)" }}>Час</span>
+              <span style={{ color: "var(--color-brand)", fontWeight: 500 }}>{tooltip.duration}</span>
+            </div>
+          </div>
+        </div>
+      )}
       {/* HEADER */}
       <div
         style={{
@@ -188,8 +240,8 @@ function ScheduleChart({
                         key={activity.id}
                         style={{
                           position: "absolute",
-                          top: "10px",
-                          height: "32px",
+                          top: "6px",
+                          height: "88px",
                           left: `${Math.round(startMin * zoom)}px`,
                           width: `${Math.round(widthMin * zoom)}px`,
                           borderRadius: "4px",
@@ -209,7 +261,21 @@ function ScheduleChart({
                           return (
                             <div
                               key={session.id}
-                              title={`${session.file?.name ?? "—"} (${session.file?.language ?? "—"})`}
+                              onMouseEnter={(e) =>
+                                setTooltip({
+                                  x: e.clientX,
+                                  y: e.clientY,
+                                  name: session.file?.name ?? "—",
+                                  lang: session.file?.language ?? "—",
+                                  start: formatTs(session.enter_time),
+                                  end: formatTs(session.close_time),
+                                  duration: formatTimeDuration(session.close_time - session.enter_time),
+                                })
+                              }
+                              onMouseMove={(e) =>
+                                setTooltip((prev) => prev ? { ...prev, x: e.clientX, y: e.clientY } : prev)
+                              }
+                              onMouseLeave={() => setTooltip(null)}
                               style={{
                                 position: "absolute",
                                 top: 0,
