@@ -38,12 +38,16 @@ export default async function RepositoryDetailPage({
   const total_duration = stats.weekStats.workspace_total_spent;
   const week_count = countTotalDurationWeek(stats.weekStats.days);
 
+  const today = new Date().toISOString().substring(0, 10);
+  const isToday = day === today;
+
   const dayActivityList = stats.weekStats.days?.[day] ?? [];
+  const dayDuration = dayActivityList.reduce((acc, a) => acc + a.total_duration, 0);
+
   const files = dayActivityList.flatMap(
     (activity) => stats.weekStats.sessions[String(activity.id)] ?? []
   );
-
-  const totalDuration = files.reduce(
+  const filesTotalDuration = files.reduce(
     (acc, f) => acc + (f.close_time - f.enter_time),
     0
   );
@@ -165,10 +169,10 @@ export default async function RepositoryDetailPage({
           >
             <div style={{ fontSize: "12px", color: "var(--color-text-tertiary)", marginBottom: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
               <i className="ti ti-sun" style={{ fontSize: "15px" }} aria-hidden="true" />
-              Активність сьогодні
+              {isToday ? "Активність сьогодні" : "Активність за день"}
             </div>
             <div style={{ fontSize: "26px", fontWeight: 500, color: "var(--color-text-primary)" }}>
-              {formatTimeDuration(totalDuration)}
+              {formatTimeDuration(dayDuration)}
             </div>
             <div style={{ fontSize: "12px", color: "var(--color-text-tertiary)", marginTop: "4px" }}>
               {dayLabel}
@@ -177,7 +181,7 @@ export default async function RepositoryDetailPage({
         </div>
 
         {/* FILES */}
-        <FilesChart totalDuration={totalDuration} files={files} />
+        <FilesChart totalDuration={filesTotalDuration} files={files} />
 
       </main>
     </div>

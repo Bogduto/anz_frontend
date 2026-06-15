@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import MostVisitedFilesChart from "./MostVisitedFilesChart";
+import formatTimeDuration from "@/utils/formatTimeDuration";
 
 export type ColorResult = {
   backgroundColor: string;
@@ -95,8 +96,8 @@ function FilesChart({
             <div key={item.name} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px", fontSize: "12px", color: "var(--color-text-secondary)" }}>
               <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: item.color.backgroundColor, flexShrink: 0 }} />
               <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.name}</span>
-              <span style={{ marginLeft: "auto", fontWeight: 500, color: "var(--color-text-primary)" }}>
-                {item.percent.toFixed(1)}%
+              <span style={{ marginLeft: "auto", fontWeight: 500, color: "var(--color-text-primary)", whiteSpace: "nowrap" }}>
+                {formatTimeDuration(item.value)} · {item.percent.toFixed(1)}%
               </span>
             </div>
           ))}
@@ -123,8 +124,8 @@ function FilesChart({
                 <span style={{ fontSize: "13px", fontFamily: "var(--font-mono)", color: "var(--color-text-primary)" }}>
                   {item.name}
                 </span>
-                <span style={{ fontSize: "12px", color: "var(--color-text-tertiary)" }}>
-                  {item.percent.toFixed(1)}%
+                <span style={{ fontSize: "12px", color: "var(--color-text-tertiary)", whiteSpace: "nowrap" }}>
+                  {formatTimeDuration(item.value)} · {item.percent.toFixed(1)}%
                 </span>
               </div>
               <div style={{ height: "6px", background: "var(--color-background-secondary)", borderRadius: "3px" }}>
